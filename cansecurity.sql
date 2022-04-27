@@ -141,7 +141,7 @@ ALTER TABLE Empleado_Proyecto ADD FOREIGN KEY (CodEmpleado) REFERENCES Empleado(
 ALTER TABLE Empleado_Proyecto ADD FOREIGN KEY (CodProyecto) REFERENCES Proyecto(CodProyecto) ON UPDATE CASCADE ON DELETE CASCADE;
 
 -- Tabla de informacion de retrida
-CREATE TABLE Info_Retrida(
+CREATE TABLE Info_Retirada(
     CodEmpleado VARCHAR(20),
     NombreEmpleado VARCHAR(50),
     Producto VARCHAR(35)
