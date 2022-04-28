@@ -1,7 +1,7 @@
 -- Consultas Simples
 
 -- Aitor
--- 5) Cual es el código del Responsable con más proyectos asignados
+-- 6) Cual es el código del Responsable con más proyectos asignados
 -- y el número de proyectos asignados que tiene
 SELECT Tabla.CodResp, MAX(Tabla.Proyectos_Asignados) Proyectos_Asignados
 FROM (
@@ -18,7 +18,7 @@ AS Tabla;
 |       1 |                   3 |
 +---------+---------------------+
 
--- 6) Muestra los Productos que valgan más de 100€,
+-- 7) Muestra los Productos que valgan más de 100€,
 -- seleccionando el CodProducto, Nombre y Precio
 SELECT P.CodProducto, P.Nombre, P.Precio 
 FROM Producto P
@@ -35,7 +35,7 @@ WHERE P.Precio > 100;
 | PROD12345678 | Camara Fibra Optica  | 323.20 |
 +--------------+----------------------+--------+
 
--- 7) Muestra todos los Productos que no han salido del Almacen 
+-- 8) Muestra todos los Productos que no han salido del Almacen 
 -- (Fecha de Salida Nula), seleccionando el CodProducto, Nombre y Precio
 SELECT P.CodProducto, P.Nombre, P.Precio 
 FROM Producto P
@@ -53,7 +53,7 @@ WHERE P.FechaRetirada IS NULL;
 | PROD12345677 | Switch POE            |  50.32 |
 +--------------+-----------------------+--------+
 
--- 8) Muestra todos los Productos que hayan salido del Almacen 
+-- 9) Muestra todos los Productos que hayan salido del Almacen 
 -- (Fecha de Salida No Nula), seleccionando el CodProducto, Nombre y Precio
 SELECT P.CodProducto, P.Nombre, P.Precio 
 FROM Producto P
@@ -69,3 +69,18 @@ WHERE P.FechaRetirada IS NOT NULL;
 | PROD12345678 | Camara Fibra Optica       | 323.20 |
 | PROD12345679 | Cable Coaxial             |   3.20 |
 +--------------+---------------------------+--------+
+
+-- 10) Muestra los Empleados propios de CAN Security, seleccionando
+-- su Codigo y Nombre
+SELECT CodEmpleado, Nombre 
+FROM Empleado 
+WHERE Tipo = "Propio";
+
+-- Resultado
++--------------+-------------------------------+
+| CodEmpleado  | Nombre                        |
++--------------+-------------------------------+
+| EMP123456785 | Jose Carlos Gonzalez Calcines |
+| EMP123456788 | Andrea Melian Jimenez         |
+| EMP123456789 | Paco Martel Hernandez         |
++--------------+-------------------------------+
