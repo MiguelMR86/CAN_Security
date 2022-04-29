@@ -16,11 +16,10 @@ BEGIN
 
     IF NEW.CodProducto IN (SELECT CodProducto FROM Producto) THEN
 
-        IF NEW.Precio > precioProducto THEN
+        IF NEW.PrecioCompra > precioProducto THEN
 
             UPDATE Producto
             SET Producto.Precio = NEW.PrecioCompra
-            FROM Producto
             WHERE Producto.CodProducto = NEW.CodProducto;
 
         END IF;
@@ -29,3 +28,26 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+-- Ejemplo PROD12345678
+SELECT Precio 
+FROM Producto 
+WHERE CodProducto = "PROD12345678";
+
+-- Resultado
++--------+
+| Precio |
++--------+
+| 323.20 |
++--------+
+
+INSERT INTO Pedido VALUES ("PED987654321","Cable UTP, Cable Coaxial, Cable de Fibra Optica",5); 
+
+INSERT INTO Pedido_Producto VALUES ("PROD12345678","PED987654321",6,400.50);
+
+-- Precio tras insertar un Pedido_Producto con precio de compra mayor
++--------+
+| Precio |
++--------+
+| 400.50 |
++--------+
