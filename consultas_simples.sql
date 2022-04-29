@@ -1,7 +1,7 @@
 -- Consultas Simples
 
 -- Aitor
--- 6) Cual es el código del Responsable con más proyectos asignados
+-- 6) Cual es el código del Responsable con más proveedores asignados
 -- y el número de proyectos asignados que tiene
 SELECT Tabla.CodResp, MAX(Tabla.Proyectos_Asignados) Proyectos_Asignados
 FROM (
