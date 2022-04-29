@@ -72,3 +72,89 @@ AND C.Tipo = "Camaras";
 | PROD12345672 | Camara Analogica    | 150.99 |
 | PROD12345678 | Camara Fibra Optica | 323.20 |
 +--------------+---------------------+--------+
+
+
+-- Miguel
+-- 6) Muestra todos los Productos que no esten en stock (stock = 0, stock != null)
+SELECT Producto.Nombre AS "Fuera de Stock"
+FROM Producto
+INNER JOIN Estante
+ON Estante.CodProducto = Producto.CodProducto
+WHERE Estante.Stock = 0;
+
++-------------------+
+| Fuera de Stock    |
++-------------------+
+| PCI Tubo + Cable  |
+| Control de Acceso |
++-------------------+
+
+
+-- 7) Muestra todos los Empleados que tengan Poyectos de tipo "aviso"
+SELECT Empleado.Nombre AS "Proyectos Aviso"
+FROM Empleado
+INNER JOIN Empleado_Proyecto AS E_P
+ON E_P.CodEmpleado = Empleado.CodEmpleado
+INNER JOIN Proyecto
+ON Proyecto.CodProyecto = E_P.CodProyecto 
+WHERE Proyecto.Tipo = "Aviso";
+
+-- Resultado
++-----------------------+
+| Proyectos Aviso       |
++-----------------------+
+| Alberto Medina Suarez |
+| Andrea Melian Jimenez |
+| Paco Martel Hernandez |
++-----------------------+
+
+
+-- 8) Muestra los Proyectos realizados por Empleados Subcontratados
+SELECT Empleado.Nombre, Empleado.tipo, Proyecto.tipo AS "Proyectos Aviso"
+FROM Empleado
+INNER JOIN Empleado_Proyecto AS E_P
+ON E_P.CodEmpleado = Empleado.CodEmpleado
+INNER JOIN Proyecto
+ON Proyecto.CodProyecto = E_P.CodProyecto
+WHERE Empleado.tipo = "Subcontratado";
+
+-- Resultado
++-----------------------+---------------+-----------------+
+| Nombre                | tipo          | Proyectos Aviso |
++-----------------------+---------------+-----------------+
+| Juan Garcia Cordero   | Subcontratado | Basico          |
+| Alberto Medina Suarez | Subcontratado | Aviso           |
++-----------------------+---------------+-----------------+
+
+
+-- 9) Muestra los Productos que hayan sido retirados por el Empleado "Paco"
+SELECT Producto.Nombre AS "Retirado por Paco"
+FROM Producto
+INNER JOIN Empleado
+ON Empleado.CodEmpleado = Producto.CodEmpleado
+WHERE Empleado.Nombre LIKE "Paco%"; 
+
+-- Resultado
++---------------------------+
+| Retirado por Paco         |
++---------------------------+
+| Cierre Magnetico          |
+| Cable de Energia Unipolar |
+| Camara Fibra Optica       |
++---------------------------+
+
+
+-- 10) Muestra el Nombre del Empleado que retiro el producto "PROD12345678"
+
+SELECT Empleado.Nombre AS "Producto retirado por"
+FROM Empleado
+INNER JOIN Producto
+ON Producto.CodEmpleado = Empleado.CodEmpleado
+WHERE Producto.CodProducto = "PROD12345678";
+
+-- Resultado
++-----------------------+
+| Producto retirado por |
++-----------------------+
+| Paco Martel Hernandez |
++-----------------------+
