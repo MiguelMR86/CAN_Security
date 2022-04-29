@@ -89,4 +89,16 @@ SELECT productos_en_stock("Estante Prueba") AS "Productos en Stock";
 | ERR2: No hay productos en Stock |
 +---------------------------------+
 
--- Miguel 
+-- Miguel
+-- Función a la que le pasamos un código de Producto y nos de la información del mismo,
+-- el stock que tiene y en que Estante se encuentra situado, siguiendo el siguiente 
+-- formato: "EL Switch POE tiene 5 unidades y se encuentra en el Estante 1"
+
+DELIMITER $$
+DROP FUNCTION IF EXISTS Prod_Info $$
+CREATE FUNCTION Prod_Info(Cod_Prod VARCHAR(12))
+RETURNS VARCHAR(100)
+BEGIN
+
+END $$
+DELIMITER ;
