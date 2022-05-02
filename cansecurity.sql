@@ -262,7 +262,6 @@ INSERT INTO Estante VALUES
 ("Estante CCTV","PROD12345677",4),
 ("Estante Intrusion","PROD12345670",3),
 ("Estante Cableado","PROD12345673",17),
-("Estante Prueba","PROD12345673",17),
 ("Estante Intrusion","PROD12345674",8);
 
 -- Prueba para el Procedimiento productos_en_stock
