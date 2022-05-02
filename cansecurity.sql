@@ -46,6 +46,13 @@ CREATE TABLE Producto(
     CodEmpleado VARCHAR(20)
 );
 
+-- Restricciones
+
+-- Restricción FechaEntrada <= FechaRetirada
+ALTER TABLE Producto ADD CONSTRAINT FechaRetiradaMayor CHECK (FechaEntrada <= FechaRetirada);
+-- Restricción Precio > 0
+ALTER TABLE Producto ADD CONSTRAINT PrecioMayorZero CHECK (Precio > 0);
+
 -- Tabla de Pedido - Producto
 CREATE TABLE Pedido_Producto(
     CodProducto VARCHAR(12),
@@ -58,6 +65,13 @@ CREATE TABLE Pedido_Producto(
 -- Introduciendo claves ajenas Pedido_Producto
 ALTER TABLE Pedido_Producto ADD FOREIGN KEY (CodProducto) REFERENCES Producto(CodProducto) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE Pedido_Producto ADD FOREIGN KEY (NumPedido) REFERENCES Pedido(NumPedido) ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- Restricciones
+
+-- Restriccion Cantidad > 0
+ALTER TABLE Pedido_Producto ADD CONSTRAINT CantidadMayorZero CHECK (Cantidad > 0);
+-- Restriccion  Precio > 0 
+ALTER TABLE Pedido_Producto ADD CONSTRAINT PrecioMayorZero CHECK (PrecioCompra > 0);
 
 -- Ponemos todos los atributos hijos dentro del padre
 -- CCTV
@@ -111,6 +125,10 @@ CREATE TABLE Estante(
 
 -- Alter table Estante - Producto
 ALTER TABLE Estante ADD FOREIGN KEY (CodProducto) REFERENCES Producto(CodProducto) ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- Restricción Stock >= 0
+ALTER TABLE Estante ADD CONSTRAINT StockMayorZero CHECK (Stock >= 0);
+
 
 -- Empleado - Proyecto
 CREATE TABLE Empleado(
@@ -263,11 +281,42 @@ INSERT INTO Estante VALUES
 ("Estante Intrusion","PROD12345670",3),
 ("Estante Cableado","PROD12345673",17),
 ("Estante Intrusion","PROD12345674",8);
-<<<<<<< HEAD
 
 -- Prueba para el Procedimiento productos_en_stock
 INSERT INTO Estante VALUES 
 ("Estante Prueba","PROD12345673",0),
 ("Estante Prueba","PROD12345674",0);
-=======
->>>>>>> triggers
+
+-- Prueba Restricciones
+
+-- Restricción FechaEntrada <= FechaRetirada
+INSERT INTO Producto VALUES 
+("PROD12345111","Cable Prueba",3.2,"8m de cable",NULL,NULL,"Cableado","2020-09-03","2020-04-26","EMP123456786");
+-- Resultado
+ERROR 4025 (23000): CONSTRAINT `FechaRetiradaMayor` failed for `cansecurity`.`producto`
+
+-- Restricción Precio > 0
+INSERT INTO Producto VALUES 
+("PROD12345112","Cable Prueba",0,"8m de cable",NULL,NULL,"Cableado","2020-04-26","2020-09-03","EMP123456786");
+-- Resultado
+ERROR 4025 (23000): CONSTRAINT `PrecioMayorZero` failed for `cansecurity`.`producto`
+
+-- Restriccion Cantidad > 0
+INSERT INTO Pedido_Producto VALUES
+("PROD12345678","PED123451111",0,350.50);
+
+-- RESULTADO
+ERROR 4025 (23000): CONSTRAINT `CantidadMayorZero`
+
+-- Restriccion  Precio > 0 
+INSERT INTO Pedido_Producto VALUES
+("PROD12345678","PED123451111",3,0);
+
+-- RESULTADO
+ERROR 4025 (23000): CONSTRAINT `PrecioMayorZero` failed for `cansecurity`.`pedido_producto`
+
+-- Stock Estante < 0
+INSERT INTO Estante VALUES 
+("Estante Prueba","PROD12345689",-1);
+-- Resultado
+ERROR 4025 (23000): CONSTRAINT `StockMayorZero` failed for `cansecurity`.`estante`
