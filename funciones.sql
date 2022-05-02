@@ -93,7 +93,7 @@ SELECT productos_en_stock("Estante Prueba") AS "Productos en Stock";
 
 -- Función a la que le pasamos un código de Producto y nos de la información del mismo,
 -- el stock que tiene y en que Estante se encuentra situado, siguiendo el siguiente 
--- formato: "EL Switch POE tiene 5 unidades y se encuentra en el Estante 1"
+-- formato: "EL Switch POE tiene 5 unidades y se encuentra en el Estante CCTV"
 
 DELIMITER $$
 DROP FUNCTION IF EXISTS prod_info_stock $$
