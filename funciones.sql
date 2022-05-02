@@ -118,7 +118,7 @@ BEGIN
         SET Result = "ERROR: No se encontro el producto.";
 
     ELSEIF PR_Stock = 0 THEN
-        SET Result = CONCAT("ERROR: El ",PR_Nombre," no se ecuentra en stock.");
+        SET Result = CONCAT("ERROR: El ",PR_Nombre," no se encuentra en stock.");
 
     ELSE
         SET Result = CONCAT("El ",PR_Nombre," tiene ",PR_Stock," unidades y se encuentra en el ",PR_Estante,".");
