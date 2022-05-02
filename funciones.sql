@@ -90,15 +90,64 @@ SELECT productos_en_stock("Estante Prueba") AS "Productos en Stock";
 +---------------------------------+
 
 -- Miguel
+
 -- Función a la que le pasamos un código de Producto y nos de la información del mismo,
 -- el stock que tiene y en que Estante se encuentra situado, siguiendo el siguiente 
 -- formato: "EL Switch POE tiene 5 unidades y se encuentra en el Estante 1"
 
 DELIMITER $$
-DROP FUNCTION IF EXISTS Prod_Info $$
-CREATE FUNCTION Prod_Info(Cod_Prod VARCHAR(12))
-RETURNS VARCHAR(100)
+DROP FUNCTION IF EXISTS prod_info_stock $$
+CREATE FUNCTION prod_info_stock(Cod_Prod VARCHAR(30))
+RETURNS VARCHAR(200)
 BEGIN
 
+    DECLARE Result VARCHAR(200) DEFAULT "";
+    DECLARE PR_Nombre VARCHAR(100) DEFAULT "";
+    DECLARE PR_Estante VARCHAR(100) DEFAULT "";
+    DECLARE PR_Stock INT;
+
+    SELECT Pr.nombre, COUNT(Pr.Nombre), Es.NombreEst
+    INTO PR_Nombre, PR_Stock, PR_Estante
+    FROM Producto Pr
+    INNER JOIN Estante Es
+    ON Pr.CodProducto = Es.CodProducto
+    WHERE Pr.CodProducto = Cod_Prod
+    AND Es.Stock > 0;
+
+    IF Cod_Prod NOT IN (SELECT CodProducto FROM Producto) THEN
+        SET Result = "ERROR: No se encontro el producto.";
+
+    ELSEIF PR_Stock = 0 THEN
+        SET Result = CONCAT("ERROR: El ",PR_Nombre," no se ecuentra en stock.");
+
+    ELSE
+        SET Result = CONCAT("El ",PR_Nombre," tiene ",PR_Stock," unidades y se encuentra en el ",PR_Estante,".");
+    END IF;
+
+    RETURN Result;
+    
 END $$
 DELIMITER ;
+
+SELECT prod_info_stock("PROD12345678") AS "Stock y Ubicacion del Producto";
+
+-- Resultado
++----------------------------------------------------------------------------+
+| Stock y Ubicacion del Producto                                             |
++----------------------------------------------------------------------------+
+| El Camara Fibra Optica tiene 1 unidades y se encuentra en el Estante CCTV. |
++----------------------------------------------------------------------------+
+
+SELECT prod_info_stock("PROD123456710") AS "Stock y Ubicacion del Producto";
++--------------------------------+
+| Stock y Ubicacion del Producto |
++--------------------------------+
+| No se encontro el producto     |
++--------------------------------+
+
+SELECT prod_info_stock("PROD12345675") AS "Stock y Ubicacion del Producto";
++-----------------------------------------------------+
+| Stock y Ubicacion del Producto                      |
++-----------------------------------------------------+
+| ERROR: El PCI Tubo + Cable no se ecuentra en stock. |
++-----------------------------------------------------+
