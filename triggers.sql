@@ -96,7 +96,7 @@ BEGIN
             ON Pr.CodProducto = Es.CodProducto
             SET Es.Stock = Es.Stock + NEW.Cantidad
             WHERE Es.CodProducto = NEW.CodProducto
-            AND Es.NombreEst LIKE '%Intrusion';
+            AND Es.NombreEst LIKE '%Cableado';
 
     END CASE;
     
