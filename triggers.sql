@@ -208,3 +208,18 @@ INSERT INTO Cableado VALUES
 
 INSERT INTO Intrusion VALUES
 ("PROD12345678","INTR12345678","Centrales Alarmas",4);
+
+DELIMITER $$
+DROP TRIGGER IF EXISTS fecha_entrada_guard $$
+CREATE TRIGGER fecha_entrada_guard
+BEFORE INSERT ON Producto
+FOR EACH ROW
+BEGIN
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+    
+    IF NEW.FechaEntrada IS NULL AND NEW.FechaRetirada IS NOT NULL THEN
+        SIGNAL my_error SET MESSAGE_TEXT = "No puede haber Fecha de Retirada sin Fecha de Entrada";
+    END IF;
+
+END $$
+DELIMITER ;

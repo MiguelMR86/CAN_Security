@@ -165,6 +165,90 @@ CREATE TABLE Info_Retirada(
     Producto VARCHAR(35)
 );
 
+-- Bugs Fixed
+-- Trigger que comprueba que el tipo de producto pertenzca a CCTV
+DELIMITER $$
+DROP TRIGGER IF EXISTS cctv_guard $$
+CREATE TRIGGER cctv_guard
+BEFORE INSERT ON CCTV
+FOR EACH ROW
+BEGIN
+    DECLARE Tipo_prod VARCHAR(30);
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+    SELECT Producto.tipo 
+    INTO Tipo_prod 
+    FROM Producto 
+    WHERE CodProducto = NEW.CodProducto;
+
+    IF Tipo_prod != "CCTV" THEN 
+        SIGNAL my_error SET MESSAGE_TEXT = "El Producto no es CCTV";
+    END IF;
+
+END $$
+DELIMITER ;
+
+-- Trigger que comprueba que el tipo de producto pertenzca a Cableado
+DELIMITER $$
+DROP TRIGGER IF EXISTS cableado_guard $$
+CREATE TRIGGER cableado_guard
+BEFORE INSERT ON Cableado
+FOR EACH ROW
+BEGIN
+    DECLARE Tipo_prod VARCHAR(30);
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+    SELECT Producto.tipo 
+    INTO Tipo_prod 
+    FROM Producto 
+    WHERE CodProducto = NEW.CodProducto;
+
+    IF Tipo_prod != "Cableado" THEN 
+        SIGNAL my_error SET MESSAGE_TEXT = "El Producto no es Cableado";
+    END IF;
+
+END $$
+DELIMITER ;
+
+-- Trigger que comprueba que el tipo de producto pertenzca a Intrusion
+DELIMITER $$
+DROP TRIGGER IF EXISTS intrusion_guard $$
+CREATE TRIGGER intrusion_guard
+BEFORE INSERT ON Intrusion
+FOR EACH ROW
+BEGIN
+    DECLARE Tipo_prod VARCHAR(30);
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+    SELECT Producto.tipo 
+    INTO Tipo_prod 
+    FROM Producto 
+    WHERE CodProducto = NEW.CodProducto;
+
+    IF Tipo_prod != "Intrusion" THEN 
+        SIGNAL my_error SET MESSAGE_TEXT = "El Producto no es Intrusion";
+    END IF;
+
+END $$
+DELIMITER ;
+
+-- Trigger que comprueba que ella fecha de retirada de un producto no pueda ser NO NULA
+-- si su fecha de entrada es NULA
+DELIMITER $$
+DROP TRIGGER IF EXISTS fecha_entrada_guard $$
+CREATE TRIGGER fecha_entrada_guard
+BEFORE INSERT ON Producto
+FOR EACH ROW
+BEGIN
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+    
+    IF NEW.FechaEntrada IS NULL AND NEW.FechaRetirada IS NOT NULL THEN
+        SIGNAL my_error SET MESSAGE_TEXT = "No puede haber Fecha de Retirada sin Fecha de Entrada";
+    END IF;
+
+END $$
+DELIMITER ;
+
 -- Insercion de Datos
 
 -- Responsable_Proveedor
