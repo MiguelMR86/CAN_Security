@@ -130,3 +130,81 @@ WHERE Es.CodProducto = "PROD12345677";
 +--------------+--------------+-------+
 | Estante CCTV | PROD12345677 |    10 |
 +--------------+--------------+-------+
+
+-- Bugs Fixed
+-- Trigger que cuando se inserte un Producto también lo inserte en su Tabla Correspondiente
+-- en función de su tipo 
+
+DELIMITER $$
+DROP TRIGGER IF EXISTS cctv_guard $$
+CREATE TRIGGER cctv_guard
+BEFORE INSERT ON CCTV
+FOR EACH ROW
+BEGIN
+    DECLARE Tipo_prod VARCHAR(30);
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+    SELECT Producto.tipo 
+    INTO Tipo_prod 
+    FROM Producto 
+    WHERE CodProducto = NEW.CodProducto;
+
+    IF Tipo_prod != "CCTV" THEN 
+        SIGNAL my_error SET MESSAGE_TEXT = "El Producto no es CCTV";
+    END IF;
+
+END $$
+DELIMITER ;
+
+DELIMITER $$
+DROP TRIGGER IF EXISTS cableado_guard $$
+CREATE TRIGGER cableado_guard
+BEFORE INSERT ON Cableado
+FOR EACH ROW
+BEGIN
+    DECLARE Tipo_prod VARCHAR(30);
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+    SELECT Producto.tipo 
+    INTO Tipo_prod 
+    FROM Producto 
+    WHERE CodProducto = NEW.CodProducto;
+
+    IF Tipo_prod != "Cableado" THEN 
+        SIGNAL my_error SET MESSAGE_TEXT = "El Producto no es Cableado";
+    END IF;
+
+END $$
+DELIMITER ;
+
+DELIMITER $$
+DROP TRIGGER IF EXISTS intrusion_guard $$
+CREATE TRIGGER intrusion_guard
+BEFORE INSERT ON Intrusion
+FOR EACH ROW
+BEGIN
+    DECLARE Tipo_prod VARCHAR(30);
+    DECLARE my_error CONDITION FOR SQLSTATE '45000';
+
+    SELECT Producto.tipo 
+    INTO Tipo_prod 
+    FROM Producto 
+    WHERE CodProducto = NEW.CodProducto;
+
+    IF Tipo_prod != "Intrusion" THEN 
+        SIGNAL my_error SET MESSAGE_TEXT = "El Producto no es Intrusion";
+    END IF;
+
+END $$
+DELIMITER ;
+
+-- Casos de Prueba
+
+INSERT INTO CCTV VALUES
+("PROD12345674","INTR12345678","Camaras",NULL,"IP",8,NULL);
+
+INSERT INTO Cableado VALUES
+("PROD12345674","CBLD12345678","Cable de Camara","UTP",NULL,NULL);
+
+INSERT INTO Intrusion VALUES
+("PROD12345678","INTR12345678","Centrales Alarmas",4);
