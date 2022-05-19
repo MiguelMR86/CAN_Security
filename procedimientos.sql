@@ -10,17 +10,21 @@ CREATE PROCEDURE retirar_producto(IN codEstanteRetirar VARCHAR(30), IN codProdRe
 BEGIN
 
     DECLARE cantidadProducto INT;
+    DECLARE codEstanteProducto VARCHAR(12) DEFAULT "";
 
     SELECT Stock INTO cantidadProducto FROM Estante WHERE NombreEst = codEstanteRetirar AND CodProducto = codProdRetirar;
+    SELECT CodProducto INTO codEstanteProducto FROM Estante WHERE NombreEst = codEstanteRetirar AND CodProducto = codProdRetirar;
 
     IF codEstanteRetirar NOT IN (SELECT NombreEst FROM Estante) THEN 
         SELECT "No existe ese Estante" ERR1;
     ELSEIF codProdRetirar NOT IN (SELECT CodProducto FROM Producto) THEN
         SELECT "El Producto no existe" ERR2;
+    ELSEIF codProdRetirar NOT LIKE codEstanteProducto THEN 
+        SELECT "El Producto no pertenece a ese Estante" ERR3;
     ELSEIF cantidadRetirar <= 0 THEN 
-        SELECT "La Cantidad a retirar debe ser mayor a 0" ERR3;
+        SELECT "La Cantidad a retirar debe ser mayor a 0" ERR4;
     ELSEIF cantidadProducto < cantidadRetirar THEN 
-        SELECT "No hay suficiente Stock de ese Producto" ERR4;
+        SELECT "No hay suficiente Stock de ese Producto" ERR5;
     ELSE 
         SET cantidadProducto = cantidadProducto - cantidadRetirar;
 
@@ -41,7 +45,7 @@ DELIMITER ;
 CALL retirar_producto("Estante CCTV","PROD12345678",10);
 CALL retirar_producto("Estante Cableado","PROD12345679",10);
 CALL retirar_producto("Estante Cableado", "PROD12345679", -1);
-CALL retirar_producto("Estante Cableado", "PROD12345611", 21);
+CALL retirar_producto("Estante Cableado", "PROD12345678", 12);
 
 
 -- Miguel
