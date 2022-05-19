@@ -19,18 +19,13 @@ BEGIN
         SELECT "El Producto no existe" ERR2;
     ELSEIF cantidadRetirar <= 0 THEN 
         SELECT "La Cantidad a retirar debe ser mayor a 0" ERR3;
-    ELSEIF cantidadProducto > cantidadRetirar THEN 
+    ELSEIF cantidadProducto < cantidadRetirar THEN 
+        SELECT "No hay suficiente Stock de ese Producto" ERR4;
+    ELSE 
         SET cantidadProducto = cantidadProducto - cantidadRetirar;
 
         UPDATE Estante 
         SET Estante.Stock = cantidadProducto 
-        WHERE NombreEst = codEstanteRetirar 
-        AND CodProducto = codProdRetirar;
-    ELSE 
-        SET cantidadProducto = 0;
-
-        UPDATE Estante 
-        SET Estante.Stock = 0
         WHERE NombreEst = codEstanteRetirar 
         AND CodProducto = codProdRetirar;
 
@@ -46,6 +41,7 @@ DELIMITER ;
 CALL retirar_producto("Estante CCTV","PROD12345678",10);
 CALL retirar_producto("Estante Cableado","PROD12345679",10);
 CALL retirar_producto("Estante Cableado", "PROD12345679", -1);
+CALL retirar_producto("Estante Cableado", "PROD12345611", 21);
 
 
 -- Miguel
